@@ -279,10 +279,11 @@ def generate_output(metadata, sql_queries):
                 backup_statements = generate_delete_backup(
                     query, metadata['case_id'], table_name, count)
                 delete_table_counts[table_name.lower()] = count + 1
-                for stmt in backup_statements:
-                    output_lines.append('GO')
-                    output_lines.append(stmt)
-                    output_lines.append('')
+                if(backup_statements):
+                    for stmt in backup_statements:
+                        output_lines.append('GO')
+                        output_lines.append(stmt)
+                        output_lines.append('')
         elif('yardi_delete_receipt' in query.lower()):
             count_t = delete_table_counts.get('trans', 0)
             count_d = delete_table_counts.get('detail', 0)
@@ -292,10 +293,11 @@ def generate_output(metadata, sql_queries):
             delete_table_counts['trans'] = count_t + 1
             delete_table_counts['detail'] = count_d + 1
             delete_table_counts['gldetail'] = count_g + 1
-            for stmt in backup_statements:
-                output_lines.append('GO')
-                output_lines.append(stmt)
-                output_lines.append('')
+            if(backup_statements):
+                for stmt in backup_statements:
+                    output_lines.append('GO')
+                    output_lines.append(stmt)
+                    output_lines.append('')
         
     output_lines.append('GO')
     query_pos = 0
@@ -541,7 +543,7 @@ def generate_delete_receipt_backup(query, case_id, count_t, count_d, count_g):
     else:
         backup_table = f"gldetail_{count_g}_{case_id}"
     backup_stmt += f"select * into {backup_table} from gldetail where htran = {receipt_id}"
-    statements.append(backup_stmt)
+    #statements.append(backup_stmt)
 
     stmt = ''
     stmt += f"Insert into DatafixHistory (hycrm, sTableName, sColumnName, hForeignKey, sNotes, sNewValue, sOldValue, dtdate)\n"
@@ -554,7 +556,7 @@ def generate_delete_receipt_backup(query, case_id, count_t, count_d, count_g):
     else:
         backup_table = f"detail_{count_d}_{case_id}"
     backup_stmt += f"select * into {backup_table} from detail where hinvorrec = {receipt_id}"
-    statements.append(backup_stmt)
+    #statements.append(backup_stmt)
 
     stmt = ''
     stmt += f"Insert into DatafixHistory (hycrm, sTableName, sColumnName, hForeignKey, sNotes, sNewValue, sOldValue, dtdate)\n"
@@ -567,7 +569,7 @@ def generate_delete_receipt_backup(query, case_id, count_t, count_d, count_g):
     else:
         backup_table = f"trans_{count_t}_{case_id}"
     backup_stmt += f"select * into {backup_table} from trans where hmy = {receipt_id}"
-    statements.append(backup_stmt)
+    #statements.append(backup_stmt)
 
     return statements
     
@@ -631,7 +633,7 @@ def generate_delete_backup(query, case_id, table_name, count):
             backup_stmt += f" {result}"
         else:
             backup_stmt += f" {where_clause}"
-    statements.append(backup_stmt)
+    #statements.append(backup_stmt)
 
     return statements
 
