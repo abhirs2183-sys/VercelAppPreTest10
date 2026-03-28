@@ -127,12 +127,10 @@ function initTypingAnimation() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // initTypingAnimation(); // Removed for static text
-    // createSnowflakes(); // Removed for new year
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('fileInput');
+    const inputForm = document.getElementById('inputForm');
+    const generateBtn = document.getElementById('generateBtn');
     const processing = document.getElementById('processing');
     const result = document.getElementById('result');
     const error = document.getElementById('error');
@@ -172,65 +170,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    uploadArea.addEventListener('click', function() {
-        fileInput.click();
-    });
+    generateBtn.addEventListener('click', function() {
+        const payload = {
+            created_by: document.getElementById('createdBy').value,
+            case_id: document.getElementById('caseId').value,
+            client_pin: document.getElementById('clientPin').value,
+            client_name: document.getElementById('clientName').value,
+            db_username: document.getElementById('dbUsername').value,
+            db_password: document.getElementById('dbPassword').value,
+            db_server: document.getElementById('dbServer').value,
+            db_name: document.getElementById('dbName').value,
+            sql_queries: document.getElementById('sqlQueries').value
+        };
 
-    uploadArea.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        uploadArea.classList.add('dragover');
-    });
-
-    uploadArea.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-    });
-
-    uploadArea.addEventListener('drop', function(e) {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-        
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            handleFile(files[0]);
-        }
-    });
-
-    fileInput.addEventListener('change', function() {
-        if (fileInput.files.length > 0) {
-            handleFile(fileInput.files[0]);
-        }
-    });
-
-    function handleFile(file) {
-        if (!file.name.endsWith('.pkg')) {
-            showError('Please upload a .pkg file');
-            return;
-        }
-
-        // Reset UI for new attempt
-        uploadArea.style.display = 'none';
+        inputForm.style.display = 'none';
         result.style.display = 'none';
         error.style.display = 'none';
         processing.style.display = 'block';
 
-        const formData = new FormData();
-        formData.append('file', file);
-
-        fetch('/upload', {
+        fetch('/generate', {
             method: 'POST',
-            body: formData
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
         })
         .then(response => response.json())
         .then(data => {
             processing.style.display = 'none';
-
             if (data.error) {
                 showError(data.error);
-                uploadArea.style.display = 'block';
+                inputForm.style.display = 'block';
                 return;
             }
-
             generatedContent = data.content;
             generatedFilename = data.filename;
             resultFilename.textContent = data.filename;
@@ -238,18 +208,16 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => {
             processing.style.display = 'none';
-            showError('An error occurred while processing the file');
-            uploadArea.style.display = 'block';
+            showError('An error occurred while generating the package');
+            inputForm.style.display = 'block';
             console.error(err);
         });
-    }
+    });
 
     function showError(message) {
         const errorMessage = document.getElementById('errorMessage');
         errorMessage.textContent = message;
         error.style.display = 'flex';
-        // Allow re-uploading the same file after correcting it
-        fileInput.value = '';
     }
 
     downloadBtn.addEventListener('click', function() {
@@ -262,8 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        
-        // Show validation message for 5 seconds after download
+
         const validationMessage = document.getElementById('validationMessage');
         if (validationMessage) {
             validationMessage.style.display = 'flex';
@@ -275,8 +242,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     resetBtn.addEventListener('click', function() {
         result.style.display = 'none';
-        uploadArea.style.display = 'block';
-        fileInput.value = '';
+        error.style.display = 'none';
+        inputForm.style.display = 'block';
         generatedContent = '';
         generatedFilename = '';
         const validationMessage = document.getElementById('validationMessage');

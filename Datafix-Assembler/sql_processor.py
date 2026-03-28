@@ -69,6 +69,21 @@ def split_where_clause(s):
 
     return result
 
+def process_from_fields(metadata, sql_text):
+    sql_queries = extract_sql_queries(sql_text.strip().split('\n'))
+    if not sql_queries[0]:
+        return {'error': 'No valid SQL queries found (expected UPDATE, DELETE, or EXEC statements)'}
+
+    output = generate_output(metadata, sql_queries)
+
+    return {
+        'filename': f"Case#{metadata['case_id']}#Datafix.pkg",
+        'content': output,
+        'case_id': metadata['case_id'],
+        'created_by': metadata['created_by']
+    }
+
+
 def process_pkg_file(content):
     lines = content.strip().split('\n')
 

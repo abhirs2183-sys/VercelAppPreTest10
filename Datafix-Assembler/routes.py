@@ -32,34 +32,43 @@ def log_user_activity(created_by, case_id):
 def index():
     return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file provided'}), 400
-    
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No file selected'}), 400
-    
-    if not file.filename or not file.filename.endswith('.pkg'):
-        return jsonify({'error': 'Only .pkg files are accepted'}), 400
-    
+@app.route('/generate', methods=['POST'])
+def generate_package():
+    from sql_processor import process_from_fields
+    data = request.get_json()
+
+    metadata = {
+        'created_by': (data.get('created_by') or '').strip(),
+        'case_id': (data.get('case_id') or '').strip(),
+        'client_pin': (data.get('client_pin') or '').strip(),
+        'client_name': (data.get('client_name') or '').strip(),
+        'username': (data.get('db_username') or '').strip(),
+        'password': (data.get('db_password') or '').strip(),
+        'db_server': (data.get('db_server') or '').strip(),
+        'db_name': (data.get('db_name') or '').strip(),
+    }
+    sql_text = (data.get('sql_queries') or '').strip()
+
+    required = ['created_by', 'case_id', 'client_pin', 'client_name', 'username', 'password', 'db_server', 'db_name']
+    for field in required:
+        if not metadata[field]:
+            label = field.replace('_', ' ').title()
+            return jsonify({'error': f'{label} is required'}), 400
+
+    if not sql_text:
+        return jsonify({'error': 'SQL Queries cannot be empty'}), 400
+
     try:
-        content = file.read().decode('utf-8', errors='replace')
-        result = process_pkg_file(content)
-        
+        result = process_from_fields(metadata, sql_text)
+
         if 'error' in result:
             return jsonify({'error': result['error']}), 400
-        
-        # Log user activity
+
         try:
-            if result.get('created_by') and result.get('case_id'):
-                log_user_activity(result['created_by'], result['case_id'])
-            else:
-                logging.warning(f"Metadata missing for logging: created_by={result.get('created_by')}, case_id={result.get('case_id')}")
+            log_user_activity(result['created_by'], result['case_id'])
         except Exception as log_err:
             logging.error(f"Activity logging failed: {str(log_err)}")
-        
+
         return jsonify({
             'success': True,
             'filename': result['filename'],
@@ -67,8 +76,8 @@ def upload_file():
             'case_id': result['case_id']
         })
     except Exception as e:
-        logging.error(f"Error processing file: {str(e)}")
-        return jsonify({'error': f'Error processing file: {str(e)}'}), 500
+        logging.error(f"Error generating package: {str(e)}")
+        return jsonify({'error': f'Error generating package: {str(e)}'}), 500
 
 from app import app, db, Feedback
 

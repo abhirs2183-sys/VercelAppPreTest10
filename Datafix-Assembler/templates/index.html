@@ -50,25 +50,59 @@
         </section>
 
         <section class="upload-section" id="upload-section">
-            <div class="section-badge"><i class="fas fa-upload"></i> Upload Tool</div>
+            <div class="section-badge"><i class="fas fa-edit"></i> Package Builder</div>
             <h2 class="section-title">Create Your <span class="cyan">Package</span></h2>
-            <p class="section-subtitle">Upload your .pkg file and get your processed package in seconds</p>
-            
-            <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">
-                    <i class="fas fa-cloud-upload-alt"></i>
+            <p class="section-subtitle">Fill in the details below and get your processed package in seconds</p>
+
+            <div class="input-form" id="inputForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-user"></i> Created By</label>
+                        <input type="text" id="createdBy" class="form-input" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-hashtag"></i> Case #</label>
+                        <input type="text" id="caseId" class="form-input" placeholder="e.g. 12345">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-id-badge"></i> Client PIN</label>
+                        <input type="text" id="clientPin" class="form-input" placeholder="Client PIN">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-building"></i> Client Name</label>
+                        <input type="text" id="clientName" class="form-input" placeholder="Client Name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-key"></i> DB Username</label>
+                        <input type="text" id="dbUsername" class="form-input" placeholder="Database username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-lock"></i> DB Password</label>
+                        <input type="password" id="dbPassword" class="form-input" placeholder="Database password">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-server"></i> DB Server</label>
+                        <input type="text" id="dbServer" class="form-input" placeholder="Server name or IP">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-database"></i> DB Name</label>
+                        <input type="text" id="dbName" class="form-input" placeholder="Database name">
+                    </div>
                 </div>
-                <h3 class="upload-title">Drag & drop your .pkg file</h3>
-                <p class="upload-text">or click to browse from your computer</p>
-                <p class="upload-note"><i class="fas fa-lock"></i> Accepts .pkg files only</p>
-                <input type="file" id="fileInput" accept=".pkg" hidden>
+                <div class="form-group form-group-full">
+                    <label class="form-label"><i class="fas fa-code"></i> SQL Queries</label>
+                    <textarea id="sqlQueries" class="form-textarea" placeholder="Paste your SQL queries here (UPDATE, DELETE, EXEC statements)..."></textarea>
+                </div>
+                <button class="btn btn-yellow btn-generate" id="generateBtn">
+                    <i class="fas fa-bolt"></i> Generate Package
+                </button>
             </div>
-            
+
             <div class="processing" id="processing" style="display: none;">
                 <div class="spinner"></div>
                 <p>Processing your package...</p>
             </div>
-            
+
             <div class="result" id="result" style="display: none;">
                 <div class="result-header">
                     <i class="fas fa-check-circle"></i>
@@ -77,13 +111,13 @@
                 <div class="result-filename" id="resultFilename"></div>
                 <div class="result-actions">
                     <button class="btn btn-yellow" id="downloadBtn"><i class="fas fa-download"></i> Download Package</button>
-                    <button class="btn btn-outline" id="resetBtn"><i class="fas fa-redo"></i> Process Another File</button>
+                    <button class="btn btn-outline" id="resetBtn"><i class="fas fa-redo"></i> Create Another Package</button>
                 </div>
                 <div class="validation-message" id="validationMessage" style="display: none;">
                     <i class="fas fa-info-circle"></i> Kindly validate the package at your end to ensure it is accurate.
                 </div>
             </div>
-            
+
             <div class="error" id="error" style="display: none;">
                 <i class="fas fa-exclamation-circle"></i>
                 <p id="errorMessage"></p>
