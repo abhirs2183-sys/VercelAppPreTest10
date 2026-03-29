@@ -70,9 +70,10 @@ def split_where_clause(s):
     return result
 
 def process_from_fields(metadata, sql_text):
-    sql_queries = extract_sql_queries(sql_text.strip().split('\n'))
-    if not sql_queries[0]:
-        return {'error': 'No valid SQL queries found (expected UPDATE, DELETE, or EXEC statements)'}
+    if sql_text.strip():
+        sql_queries = extract_sql_queries(sql_text.strip().split('\n'))
+    else:
+        sql_queries = ([], {-1})
 
     output = generate_output(metadata, sql_queries)
 

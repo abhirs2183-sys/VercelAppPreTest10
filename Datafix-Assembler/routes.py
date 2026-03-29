@@ -37,26 +37,21 @@ def generate_package():
     from sql_processor import process_from_fields
     data = request.get_json()
 
+    def field(key, default):
+        val = (data.get(key) or '').strip()
+        return val if val else default
+
     metadata = {
-        'created_by': (data.get('created_by') or '').strip(),
-        'case_id': (data.get('case_id') or '').strip(),
-        'client_pin': (data.get('client_pin') or '').strip(),
-        'client_name': (data.get('client_name') or '').strip(),
-        'username': (data.get('db_username') or '').strip(),
-        'password': (data.get('db_password') or '').strip(),
-        'db_server': (data.get('db_server') or '').strip(),
-        'db_name': (data.get('db_name') or '').strip(),
+        'created_by': field('created_by', 'Giriraj Parik'),
+        'case_id':    field('case_id',    '12345678'),
+        'client_pin': field('client_pin', '1234567890'),
+        'client_name':field('client_name','ABC Properties LLC'),
+        'username':   field('db_username','12345678_01012001'),
+        'password':   field('db_password','a1B2c3D4e5F6'),
+        'db_server':  field('db_server',  'PCZ001DB001'),
+        'db_name':    field('db_name',    'abc_live'),
     }
     sql_text = (data.get('sql_queries') or '').strip()
-
-    required = ['created_by', 'case_id', 'client_pin', 'client_name', 'username', 'password', 'db_server', 'db_name']
-    for field in required:
-        if not metadata[field]:
-            label = field.replace('_', ' ').title()
-            return jsonify({'error': f'{label} is required'}), 400
-
-    if not sql_text:
-        return jsonify({'error': 'SQL Queries cannot be empty'}), 400
 
     try:
         result = process_from_fields(metadata, sql_text)
