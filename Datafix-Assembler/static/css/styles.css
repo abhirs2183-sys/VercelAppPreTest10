@@ -773,7 +773,7 @@ body.light-mode {
 
 .form-card {
     max-width: 900px;
-    margin: 0 auto;
+    margin: 30px auto 0;
     border-radius: 20px;
     padding: 2.5rem 2.5rem 2rem;
     position: relative;
@@ -907,16 +907,27 @@ body.light-mode {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 220px;
-    min-height: 52px;
-    padding: 0.55rem 1.4rem;
+    min-width: 280px;
+    min-height: 60px;
+    padding: 0.65rem 1.8rem;
     border-radius: 50px;
-    margin-bottom: 1.5rem;
-    background: rgba(255, 193, 7, 0.07);
-    border: 1.5px solid rgba(255, 193, 7, 0.55);
-    box-shadow: 0 0 14px rgba(255, 193, 7, 0.3);
-    position: relative;
-    overflow: hidden;
+    background: var(--bg-dark);
+    border: 1.5px solid rgba(255, 193, 7, 0.6);
+    box-shadow: 0 0 16px rgba(255, 193, 7, 0.35);
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    white-space: nowrap;
+}
+
+.dark-mode .section-title-card {
+    background: var(--bg-dark);
+}
+
+.light-mode .section-title-card {
+    background: var(--bg-light);
 }
 
 .stc-logo-state {
@@ -950,11 +961,12 @@ body.light-mode {
 .stc-text-state {
     display: flex;
     align-items: center;
-    font-size: 1.05rem;
-    font-weight: 600;
+    font-size: 1.45rem;
+    font-weight: 700;
     opacity: 0;
     transition: opacity 0.3s ease;
     white-space: nowrap;
+    gap: 0.35rem;
 }
 
 .stc-text-state.visible {

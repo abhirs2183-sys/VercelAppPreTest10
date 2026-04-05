@@ -295,23 +295,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const stcTyped = document.getElementById('stcTyped');
     const stcCursor = document.getElementById('stcCursor');
 
+    const stcTypedPkg = document.getElementById('stcTypedPkg');
     let typingTimeout = null;
     let isTyped = false;
-    const fullText = 'Create Your Package';
+    const part1 = 'Create Your ';
+    const part2 = 'Package';
 
     function typeText() {
         if (isTyped) return;
         stcLogoState.classList.add('hidden');
         stcTextState.classList.add('visible');
         stcTyped.textContent = '';
+        stcTypedPkg.textContent = '';
+        stcCursor.style.display = 'inline';
         let i = 0;
         function step() {
-            if (i < fullText.length) {
-                stcTyped.textContent += fullText[i];
+            if (i < part1.length) {
+                stcTyped.textContent += part1[i];
                 i++;
                 typingTimeout = setTimeout(step, 60);
             } else {
-                isTyped = true;
+                let j = 0;
+                function step2() {
+                    if (j < part2.length) {
+                        stcTypedPkg.textContent += part2[j];
+                        j++;
+                        typingTimeout = setTimeout(step2, 60);
+                    } else {
+                        isTyped = true;
+                        stcCursor.style.display = 'none';
+                    }
+                }
+                step2();
             }
         }
         step();
@@ -322,6 +337,8 @@ document.addEventListener('DOMContentLoaded', function() {
         isTyped = false;
         stcTextState.classList.remove('visible');
         stcTyped.textContent = '';
+        if (stcTypedPkg) stcTypedPkg.textContent = '';
+        stcCursor.style.display = 'inline';
         stcLogoState.classList.remove('hidden');
     }
 
