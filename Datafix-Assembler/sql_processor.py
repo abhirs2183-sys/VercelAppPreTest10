@@ -559,7 +559,7 @@ def generate_delete_receipt_backup(query, case_id, count_t, count_d, count_g):
     else:
         backup_table = f"gldetail_{count_g}_{case_id}"
     backup_stmt += f"select * into {backup_table} from gldetail where htran = {receipt_id}"
-    #statements.append(backup_stmt)
+    statements.append(backup_stmt)
 
     stmt = ''
     stmt += f"Insert into DatafixHistory (hycrm, sTableName, sColumnName, hForeignKey, sNotes, sNewValue, sOldValue, dtdate)\n"
@@ -572,7 +572,7 @@ def generate_delete_receipt_backup(query, case_id, count_t, count_d, count_g):
     else:
         backup_table = f"detail_{count_d}_{case_id}"
     backup_stmt += f"select * into {backup_table} from detail where hinvorrec = {receipt_id}"
-    #statements.append(backup_stmt)
+    statements.append(backup_stmt)
 
     stmt = ''
     stmt += f"Insert into DatafixHistory (hycrm, sTableName, sColumnName, hForeignKey, sNotes, sNewValue, sOldValue, dtdate)\n"
@@ -585,7 +585,7 @@ def generate_delete_receipt_backup(query, case_id, count_t, count_d, count_g):
     else:
         backup_table = f"trans_{count_t}_{case_id}"
     backup_stmt += f"select * into {backup_table} from trans where hmy = {receipt_id}"
-    #statements.append(backup_stmt)
+    statements.append(backup_stmt)
 
     return statements
     
@@ -649,7 +649,7 @@ def generate_delete_backup(query, case_id, table_name, count):
             backup_stmt += f" {result}"
         else:
             backup_stmt += f" {where_clause}"
-    #statements.append(backup_stmt)
+    statements.append(backup_stmt)
 
     return statements
 
