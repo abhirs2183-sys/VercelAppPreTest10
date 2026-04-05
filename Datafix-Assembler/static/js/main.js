@@ -289,19 +289,52 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    const header = document.getElementById('mainHeader');
     const uploadSection = document.getElementById('upload-section');
+    const stcLogoState = document.getElementById('stcLogoState');
+    const stcTextState = document.getElementById('stcTextState');
+    const stcTyped = document.getElementById('stcTyped');
+    const stcCursor = document.getElementById('stcCursor');
 
-    if (header && uploadSection) {
+    let typingTimeout = null;
+    let isTyped = false;
+    const fullText = 'Create Your Package';
+
+    function typeText() {
+        if (isTyped) return;
+        stcLogoState.classList.add('hidden');
+        stcTextState.classList.add('visible');
+        stcTyped.textContent = '';
+        let i = 0;
+        function step() {
+            if (i < fullText.length) {
+                stcTyped.textContent += fullText[i];
+                i++;
+                typingTimeout = setTimeout(step, 60);
+            } else {
+                isTyped = true;
+            }
+        }
+        step();
+    }
+
+    function revertText() {
+        clearTimeout(typingTimeout);
+        isTyped = false;
+        stcTextState.classList.remove('visible');
+        stcTyped.textContent = '';
+        stcLogoState.classList.remove('hidden');
+    }
+
+    if (uploadSection && stcLogoState) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    header.classList.add('in-package-section');
+                    typeText();
                 } else {
-                    header.classList.remove('in-package-section');
+                    revertText();
                 }
             });
-        }, { threshold: 0.15 });
+        }, { threshold: 0.2 });
         observer.observe(uploadSection);
     }
 

@@ -14,15 +14,12 @@
 </head>
 <body class="dark-mode">
     <!-- Removing New Year theme -->
-    <header class="header" id="mainHeader">
+    <header class="header">
         <div class="header-left">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="yDatafix Logo" class="logo" id="headerLogo">
-            <div class="brand" id="headerBrand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="yDatafix Logo" class="logo">
+            <div class="brand">
                 <span class="brand-name">yDatafix</span>
                 <span class="brand-tagline">Package in seconds</span>
-            </div>
-            <div class="header-section-label" id="headerSectionLabel">
-                <span>Create Your <strong>Package</strong></span>
             </div>
         </div>
         <div class="header-right">
@@ -52,8 +49,15 @@
         </section>
 
         <section class="upload-section" id="upload-section">
-            <div class="section-badge"><i class="fas fa-edit"></i> Package Builder</div>
-            <h2 class="section-title">Create Your <span class="cyan">Package</span></h2>
+            <div class="section-title-card" id="sectionTitleCard">
+                <div class="stc-logo-state" id="stcLogoState">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="yDatafix" class="stc-logo">
+                    <span class="stc-brand-name">yDatafix</span>
+                </div>
+                <div class="stc-text-state" id="stcTextState">
+                    <span class="stc-typed" id="stcTyped"></span><span class="stc-cursor" id="stcCursor">|</span>
+                </div>
+            </div>
             <p class="section-subtitle">Fill in the details below and get your processed package in seconds</p>
 
             <div class="form-card">
