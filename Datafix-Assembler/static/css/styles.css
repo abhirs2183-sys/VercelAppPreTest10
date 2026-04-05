@@ -771,10 +771,33 @@ body.light-mode {
 }
 
 
+.form-card {
+    max-width: 900px;
+    margin: 0 auto;
+    border: 2px solid var(--accent-yellow);
+    border-radius: 20px;
+    padding: 2.5rem 2.5rem 2rem;
+    box-shadow:
+        0 0 18px rgba(255, 193, 7, 0.45),
+        0 0 50px rgba(255, 193, 7, 0.18),
+        0 8px 40px rgba(0, 0, 0, 0.45);
+    position: relative;
+}
+
+.dark-mode .form-card {
+    background: rgba(10, 25, 41, 0.85);
+}
+
+.light-mode .form-card {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow:
+        0 0 18px rgba(255, 193, 7, 0.5),
+        0 0 50px rgba(255, 193, 7, 0.2),
+        0 8px 40px rgba(0, 0, 0, 0.12);
+}
+
 .input-form {
     width: 100%;
-    max-width: 860px;
-    margin: 0 auto;
 }
 
 .form-grid {
@@ -805,34 +828,40 @@ body.light-mode {
 
 .form-input,
 .form-textarea {
-    padding: 0.7rem 1rem;
-    border-radius: 8px;
-    border: 1px solid var(--border-dark);
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid rgba(0, 212, 255, 0.25);
     font-family: inherit;
     font-size: 0.95rem;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
     width: 100%;
+    letter-spacing: 0.01em;
 }
 
 .dark-mode .form-input,
 .dark-mode .form-textarea {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 212, 255, 0.04);
     color: var(--text-white);
-    border-color: rgba(0, 212, 255, 0.2);
+    border-color: rgba(0, 212, 255, 0.22);
 }
 
 .light-mode .form-input,
 .light-mode .form-textarea {
-    background: #fff;
+    background: #f4f8fc;
     color: var(--primary-navy);
-    border-color: rgba(10, 25, 41, 0.15);
+    border-color: rgba(10, 25, 41, 0.18);
 }
 
 .form-input:focus,
 .form-textarea:focus {
     border-color: var(--primary-cyan);
-    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.12);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.14), 0 2px 8px rgba(0, 212, 255, 0.08);
+}
+
+.form-input:hover,
+.form-textarea:hover {
+    border-color: rgba(0, 212, 255, 0.45);
 }
 
 .form-textarea {
@@ -840,6 +869,7 @@ body.light-mode {
     resize: vertical;
     font-family: 'Courier New', monospace;
     font-size: 0.875rem;
+    line-height: 1.6;
 }
 
 .btn-generate {
@@ -852,6 +882,54 @@ body.light-mode {
     font-size: 1rem;
     margin-top: 0.5rem;
     border-radius: 10px;
+}
+
+.header-section-label {
+    display: none;
+    align-items: center;
+    padding: 0.35rem 1rem;
+    border: 1.5px solid var(--accent-yellow);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.35);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.dark-mode .header-section-label {
+    color: var(--text-white);
+    background: rgba(255, 193, 7, 0.08);
+}
+
+.light-mode .header-section-label {
+    color: var(--primary-navy);
+    background: rgba(255, 193, 7, 0.1);
+}
+
+.header-section-label strong {
+    color: var(--accent-yellow);
+    margin-left: 0.25rem;
+}
+
+.header.in-package-section #headerLogo,
+.header.in-package-section #headerBrand {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.header.in-package-section .header-section-label {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#headerLogo,
+#headerBrand {
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 @media (max-width: 768px) {

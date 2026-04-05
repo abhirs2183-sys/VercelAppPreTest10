@@ -14,12 +14,15 @@
 </head>
 <body class="dark-mode">
     <!-- Removing New Year theme -->
-    <header class="header">
+    <header class="header" id="mainHeader">
         <div class="header-left">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="yDatafix Logo" class="logo">
-            <div class="brand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="yDatafix Logo" class="logo" id="headerLogo">
+            <div class="brand" id="headerBrand">
                 <span class="brand-name">yDatafix</span>
                 <span class="brand-tagline">Package in seconds</span>
+            </div>
+            <div class="header-section-label" id="headerSectionLabel">
+                <span>Create Your <strong>Package</strong></span>
             </div>
         </div>
         <div class="header-right">
@@ -53,6 +56,7 @@
             <h2 class="section-title">Create Your <span class="cyan">Package</span></h2>
             <p class="section-subtitle">Fill in the details below and get your processed package in seconds</p>
 
+            <div class="form-card">
             <div class="input-form" id="inputForm">
                 <div class="form-grid">
                     <div class="form-group">
@@ -120,6 +124,7 @@
             <div class="error" id="error" style="display: none;">
                 <i class="fas fa-exclamation-circle"></i>
                 <p id="errorMessage"></p>
+            </div>
             </div>
         </section>
 
