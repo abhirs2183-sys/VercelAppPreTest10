@@ -547,43 +547,43 @@ def generate_delete_receipt_backup(query, case_id, count_t, count_d, count_g):
     query = query.strip()
     words = query.split()
     receipt_id = words[-1]
-    
-    stmt = ''
-    stmt += f"Insert into DatafixHistory (hycrm, sTableName, sColumnName, hForeignKey, sNotes, sNewValue, sOldValue, dtdate)\n"
-    stmt += f"(Select '{case_id}', 'gldetail','',hmy, 'Deleting records','','', getdate() \nfrom gldetail where htran = {receipt_id}"
-    stmt += "\n)"
-    statements.append(stmt)
-    backup_stmt = ''
+
     if count_g == 0:
         backup_table = f"gldetail_{case_id}"
     else:
         backup_table = f"gldetail_{count_g}_{case_id}"
-    backup_stmt += f"select * into {backup_table} from gldetail where htran = {receipt_id}"
-    statements.append(backup_stmt)
-
     stmt = ''
     stmt += f"Insert into DatafixHistory (hycrm, sTableName, sColumnName, hForeignKey, sNotes, sNewValue, sOldValue, dtdate)\n"
-    stmt += f"(Select '{case_id}', 'detail','',hmy, 'Deleting records','','', getdate()  \nfrom detail where hinvorrec = {receipt_id}"
+    stmt += f"(Select '{case_id}', 'gldetail','',hmy, 'Deleting records (Backup table : {backup_table})','','', getdate() \nfrom gldetail where htran = {receipt_id}"
     stmt += "\n)"
     statements.append(stmt)
     backup_stmt = ''
+    backup_stmt += f"select * into {backup_table} from gldetail where htran = {receipt_id}"
+    statements.append(backup_stmt)
+
     if count_d == 0:
         backup_table = f"detail_{case_id}"
     else:
         backup_table = f"detail_{count_d}_{case_id}"
-    backup_stmt += f"select * into {backup_table} from detail where hinvorrec = {receipt_id}"
-    statements.append(backup_stmt)
-
     stmt = ''
     stmt += f"Insert into DatafixHistory (hycrm, sTableName, sColumnName, hForeignKey, sNotes, sNewValue, sOldValue, dtdate)\n"
-    stmt += f"(Select '{case_id}', 'trans','',hmy, 'Deleting records','','', getdate() \nfrom trans where hmy = {receipt_id}"
+    stmt += f"(Select '{case_id}', 'detail','',hmy, 'Deleting records (Backup table : {backup_table})','','', getdate()  \nfrom detail where hinvorrec = {receipt_id}"
     stmt += "\n)"
     statements.append(stmt)
     backup_stmt = ''
+    backup_stmt += f"select * into {backup_table} from detail where hinvorrec = {receipt_id}"
+    statements.append(backup_stmt)
+
     if count_t == 0:
         backup_table = f"trans_{case_id}"
     else:
         backup_table = f"trans_{count_t}_{case_id}"
+    stmt = ''
+    stmt += f"Insert into DatafixHistory (hycrm, sTableName, sColumnName, hForeignKey, sNotes, sNewValue, sOldValue, dtdate)\n"
+    stmt += f"(Select '{case_id}', 'trans','',hmy, 'Deleting records (Backup table : {backup_table})','','', getdate() \nfrom trans where hmy = {receipt_id}"
+    stmt += "\n)"
+    statements.append(stmt)
+    backup_stmt = ''
     backup_stmt += f"select * into {backup_table} from trans where hmy = {receipt_id}"
     statements.append(backup_stmt)
 
@@ -616,8 +616,13 @@ def generate_delete_backup(query, case_id, table_name, count):
         if(where_clause and ('join' in where_clause)):
             fk_column = f"{alias_name}.{fk_column}"
 
+    if count == 0:
+        backup_table = f"{table_name}_{case_id}"
+    else:
+        backup_table = f"{table_name}_{count}_{case_id}"
+
     stmt = f"Insert into DatafixHistory (hycrm, sTableName, sColumnName, hForeignKey, sNotes, sNewValue, sOldValue, dtdate)\n"
-    stmt += f"(Select '{case_id}', '{table_name}','',{fk_column}, 'Deleting records','','', getdate() \n"
+    stmt += f"(Select '{case_id}', '{table_name}','',{fk_column}, 'Deleting records (Backup table : {backup_table})','','', getdate() \n"
     if where_clause:
         if(Trd_word_from):
             where_list = where_clause.lower()
@@ -629,11 +634,6 @@ def generate_delete_backup(query, case_id, table_name, count):
             stmt += f" {where_clause}"
     stmt += "\n)"
     statements.append(stmt)
-
-    if count == 0:
-        backup_table = f"{table_name}_{case_id}"
-    else:
-        backup_table = f"{table_name}_{count}_{case_id}"
         
     if(where_clause and ('join' in where_clause)):
         backup_stmt = f"select {alias_name}.* into {backup_table}"
