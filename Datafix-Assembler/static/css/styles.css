@@ -774,45 +774,42 @@ body.light-mode {
 .form-card {
     max-width: 900px;
     margin: 30px auto 0;
-    border-radius: 20px;
+    border-radius: 16px;
     padding: 2.5rem 2.5rem 2rem;
     position: relative;
-    border: none;
+
+    /* subtle border instead of yellow */
+    border: 1px solid rgba(0, 0, 0, 0.08);
+
+    /* soft professional shadow */
     box-shadow:
-        0 -6px 30px rgba(255, 193, 7, 0.5),
-        0 0 50px rgba(255, 193, 7, 0.18),
-        0 30px 60px rgba(0, 0, 0, 0.55);
+        0 10px 25px rgba(0, 0, 0, 0.08),
+        0 4px 10px rgba(0, 0, 0, 0.04);
+
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
+/* remove the flashy gradient border */
 .form-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 20px;
-    padding: 2px;
-    background: linear-gradient(
-        to bottom,
-        #ffc107 0%,
-        rgba(255, 193, 7, 0.55) 40%,
-        rgba(255, 193, 7, 0.12) 70%,
-        transparent 100%
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+    display: none;
 }
 
 .dark-mode .form-card {
-    background: rgba(10, 25, 41, 0.92);
+    background: rgba(15, 39, 68, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.6),
+        0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
 .light-mode .form-card {
-    background: rgba(255, 255, 255, 0.97);
+    background: #ffffff;
+    border: 1px solid rgba(10, 25, 41, 0.08);
+
     box-shadow:
-        0 -6px 30px rgba(255, 193, 7, 0.45),
-        0 0 50px rgba(255, 193, 7, 0.15),
-        0 30px 60px rgba(0, 0, 0, 0.12);
+        0 10px 25px rgba(0, 0, 0, 0.06),
+        0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .input-form {
