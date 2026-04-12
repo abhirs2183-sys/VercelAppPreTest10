@@ -205,6 +205,8 @@ document.addEventListener('DOMContentLoaded', function() {
             generatedFilename = data.filename;
             resultFilename.textContent = data.filename;
             result.style.display = 'block';
+            if (smartPasteToggle) smartPasteToggle.style.display = 'none';
+            if (smartPastePanel) { smartPastePanel.classList.remove('open'); smartPasteToggle && smartPasteToggle.classList.remove('active'); }
             const uploadSection = document.getElementById('upload-section');
             if (uploadSection) {
                 setTimeout(() => {
@@ -250,6 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
         result.style.display = 'none';
         error.style.display = 'none';
         inputForm.style.display = 'block';
+        if (smartPasteToggle) smartPasteToggle.style.display = '';
         generatedContent = '';
         generatedFilename = '';
         const validationMessage = document.getElementById('validationMessage');
