@@ -125,19 +125,24 @@
                 <p>Processing your package...</p>
             </div>
 
-            <div class="result" id="result" style="display: none;">
+            <div class="result-wrapper" id="resultWrapper" style="display: none;">
+            <div class="result" id="result">
+                <div class="result-icon-wrap">
+                    <i class="fas fa-check"></i>
+                </div>
                 <div class="result-header">
-                    <i class="fas fa-check-circle"></i>
                     <h3>Package Generated Successfully!</h3>
                 </div>
+                <p class="result-subtext">Your .pkg file is ready to download</p>
                 <div class="result-filename" id="resultFilename"></div>
                 <div class="result-actions">
                     <button class="btn btn-yellow" id="downloadBtn"><i class="fas fa-download"></i> Download Package</button>
-                    <button class="btn btn-outline" id="resetBtn"><i class="fas fa-redo"></i> Create Another Package</button>
+                    <button class="btn btn-outline" id="resetBtn"><i class="fas fa-redo"></i> Create Another</button>
                 </div>
                 <div class="validation-message" id="validationMessage" style="display: none;">
                     <i class="fas fa-info-circle"></i> Kindly validate the package at your end to ensure it is accurate.
                 </div>
+            </div>
             </div>
 
             <div class="error" id="error" style="display: none;">

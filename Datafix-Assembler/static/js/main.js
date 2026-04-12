@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const generateBtn = document.getElementById('generateBtn');
     const processing = document.getElementById('processing');
     const result = document.getElementById('result');
+    const resultWrapper = document.getElementById('resultWrapper');
     const error = document.getElementById('error');
     const resultFilename = document.getElementById('resultFilename');
     const downloadBtn = document.getElementById('downloadBtn');
@@ -184,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         inputForm.style.display = 'none';
-        result.style.display = 'none';
+        resultWrapper.style.display = 'none';
         error.style.display = 'none';
         processing.style.display = 'block';
 
@@ -204,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
             generatedContent = data.content;
             generatedFilename = data.filename;
             resultFilename.textContent = data.filename;
-            result.style.display = 'block';
+            resultWrapper.style.display = 'flex';
         })
         .catch(err => {
             processing.style.display = 'none';
@@ -241,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     resetBtn.addEventListener('click', function() {
-        result.style.display = 'none';
+        resultWrapper.style.display = 'none';
         error.style.display = 'none';
         inputForm.style.display = 'block';
         generatedContent = '';
