@@ -37,19 +37,18 @@ def generate_package():
     from sql_processor import process_from_fields
     data = request.get_json()
 
-    def field(key, default):
-        val = (data.get(key) or '').strip()
-        return val if val else default
+    def field(key):
+        return (data.get(key) or '').strip()
 
     metadata = {
-        'created_by': field('created_by', 'Giriraj Parik'),
-        'case_id':    field('case_id',    '12345678'),
-        'client_pin': field('client_pin', '1234567890'),
-        'client_name':field('client_name','ABC Properties LLC'),
-        'username':   field('db_username','12345678_01012001'),
-        'password':   field('db_password','a1B2c3D4e5F6'),
-        'db_server':  field('db_server',  'PCZ001DB001'),
-        'db_name':    field('db_name',    'abc_live'),
+        'created_by': field('created_by'),
+        'case_id':    field('case_id'),
+        'client_pin': field('client_pin'),
+        'client_name':field('client_name'),
+        'username':   field('db_username'),
+        'password':   field('db_password'),
+        'db_server':  field('db_server'),
+        'db_name':    field('db_name'),
     }
     sql_text = (data.get('sql_queries') or '').strip()
 
