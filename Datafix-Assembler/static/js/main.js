@@ -355,6 +355,117 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(uploadSection);
     }
 
+    // ── Smart Paste ──────────────────────────────────────
+    const smartPasteToggle = document.getElementById('smartPasteToggle');
+    const smartPastePanel  = document.getElementById('smartPastePanel');
+    const smartPasteInput  = document.getElementById('smartPasteInput');
+    const smartFillBtn     = document.getElementById('smartFillBtn');
+    const smartPasteMsg    = document.getElementById('smartPasteMessage');
+
+    if (smartPasteToggle && smartPastePanel) {
+        smartPasteToggle.addEventListener('click', () => {
+            const open = smartPastePanel.classList.toggle('open');
+            smartPasteToggle.classList.toggle('active', open);
+            if (open) setTimeout(() => smartPasteInput.focus(), 80);
+        });
+    }
+
+    function parseLabeledFormat(text) {
+        const labelMap = {
+            'client pin': 'clientPin',
+            'client#':    'clientPin',
+            'client name': 'clientName',
+            'client':     'clientName',
+            'user name':  'dbUsername',
+            'username':   'dbUsername',
+            'db username':'dbUsername',
+            'password':   'dbPassword',
+            'db password':'dbPassword',
+            'db server':  'dbServer',
+            'server':     'dbServer',
+            'instance':   'dbServer',
+            'db instance':'dbName',
+            'db name':    'dbName',
+            'case':       'caseId',
+            'case #':     'caseId',
+            'case number':'caseId',
+            'created by': 'createdBy',
+        };
+        const result = {};
+        text.split('\n').forEach(line => {
+            const idx = line.indexOf(':');
+            if (idx === -1) return;
+            const key = line.slice(0, idx).trim().toLowerCase();
+            const val = line.slice(idx + 1).trim();
+            if (!val) return;
+            const field = labelMap[key];
+            if (field) result[field] = val;
+        });
+        return Object.keys(result).length ? result : null;
+    }
+
+    function parseTokenFormat(tokens) {
+        if (tokens.length < 3) return null;
+        const first  = tokens[0];
+        const second = tokens[1];
+        // 3-token: Case # (digits), Client PIN (digits), Client Name (rest)
+        if (/^\d{5,}$/.test(first) && /^\d{5,}$/.test(second)) {
+            return { caseId: first, clientPin: second, clientName: tokens.slice(2).join(' ') };
+        }
+        // 4-token: DB Username, Password, Server, DB Name
+        if (tokens.length === 4) {
+            return { dbUsername: first, dbPassword: second, dbServer: tokens[2], dbName: tokens[3] };
+        }
+        return null;
+    }
+
+    function applyParsed(data) {
+        let filled = 0;
+        Object.entries(data).forEach(([key, val]) => {
+            const el = document.getElementById(key);
+            if (el && val) { el.value = val; filled++; }
+        });
+        return filled;
+    }
+
+    function showMsg(text, type) {
+        smartPasteMsg.textContent = text;
+        smartPasteMsg.className = 'smart-paste-message ' + type;
+        setTimeout(() => { smartPasteMsg.textContent = ''; smartPasteMsg.className = 'smart-paste-message'; }, 4000);
+    }
+
+    if (smartFillBtn) {
+        smartFillBtn.addEventListener('click', () => {
+            const raw = smartPasteInput.value.trim();
+            if (!raw) { showMsg('Nothing to parse — paste your data first.', 'error'); return; }
+
+            let parsed = null;
+            // Detect labeled format: at least one "Word: value" line
+            if (/^.+:.+/m.test(raw)) {
+                parsed = parseLabeledFormat(raw);
+            }
+            // Fallback: token format — split by tab or 2+ spaces, or single spaces
+            if (!parsed) {
+                let tokens = raw.split(/\t+/).map(s => s.trim()).filter(Boolean);
+                if (tokens.length < 3) tokens = raw.split(/\s+/).filter(Boolean);
+                parsed = parseTokenFormat(tokens);
+            }
+
+            if (!parsed) {
+                showMsg("Couldn't identify the format — check the hint below.", 'error');
+                return;
+            }
+            const count = applyParsed(parsed);
+            if (count) {
+                showMsg(`Filled ${count} field${count > 1 ? 's' : ''} successfully.`, 'success');
+                smartPasteInput.value = '';
+            } else {
+                showMsg("Parsed but no matching fields found.", 'error');
+            }
+        });
+    }
+    // ── End Smart Paste ───────────────────────────────────
+
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();

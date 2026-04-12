@@ -986,6 +986,101 @@ body.light-mode {
     50% { opacity: 0; }
 }
 
+/* ── Smart Paste ─────────────────────────────────── */
+.smart-paste-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 193, 7, 0.55);
+    background: rgba(255, 193, 7, 0.08);
+    color: var(--accent-yellow);
+    font-size: 0.75rem;
+    cursor: pointer;
+    margin-left: 0.55rem;
+    vertical-align: middle;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.smart-paste-toggle:hover,
+.smart-paste-toggle.active {
+    background: rgba(255, 193, 7, 0.2);
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.45);
+    transform: scale(1.1);
+}
+.smart-paste-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    opacity: 0;
+}
+.smart-paste-panel.open {
+    max-height: 220px;
+    opacity: 1;
+}
+.smart-paste-inner {
+    padding: 1rem 0 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.smart-paste-textarea {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255, 193, 7, 0.3);
+    background: rgba(255, 255, 255, 0.04);
+    color: inherit;
+    font-size: 0.85rem;
+    font-family: 'Courier New', monospace;
+    resize: vertical;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+.smart-paste-textarea:focus {
+    outline: none;
+    border-color: rgba(255, 193, 7, 0.65);
+    box-shadow: 0 0 8px rgba(255, 193, 7, 0.2);
+}
+.smart-paste-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.btn-smart-fill {
+    padding: 0.4rem 1.1rem;
+    border-radius: 20px;
+    border: none;
+    background: var(--accent-yellow);
+    color: #111;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: opacity 0.2s, transform 0.15s;
+    white-space: nowrap;
+}
+.btn-smart-fill:hover {
+    opacity: 0.88;
+    transform: scale(1.03);
+}
+.smart-paste-hint {
+    font-size: 0.75rem;
+    opacity: 0.5;
+}
+.smart-paste-message {
+    font-size: 0.8rem;
+    min-height: 1.1em;
+    font-weight: 600;
+}
+.smart-paste-message.success { color: #4ade80; }
+.smart-paste-message.error   { color: #f87171; }
+/* ── End Smart Paste ─────────────────────────────── */
+
 @media (max-width: 768px) {
     .hero-title {
         font-size: 2.5rem;
