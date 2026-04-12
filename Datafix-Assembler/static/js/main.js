@@ -133,7 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const generateBtn = document.getElementById('generateBtn');
     const processing = document.getElementById('processing');
     const result = document.getElementById('result');
-    const resultWrapper = document.getElementById('resultWrapper');
     const error = document.getElementById('error');
     const resultFilename = document.getElementById('resultFilename');
     const downloadBtn = document.getElementById('downloadBtn');
@@ -185,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         inputForm.style.display = 'none';
-        resultWrapper.style.display = 'none';
+        result.style.display = 'none';
         error.style.display = 'none';
         processing.style.display = 'block';
 
@@ -205,7 +204,13 @@ document.addEventListener('DOMContentLoaded', function() {
             generatedContent = data.content;
             generatedFilename = data.filename;
             resultFilename.textContent = data.filename;
-            resultWrapper.style.display = 'flex';
+            result.style.display = 'block';
+            const uploadSection = document.getElementById('upload-section');
+            if (uploadSection) {
+                setTimeout(() => {
+                    uploadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 60);
+            }
         })
         .catch(err => {
             processing.style.display = 'none';
@@ -242,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     resetBtn.addEventListener('click', function() {
-        resultWrapper.style.display = 'none';
+        result.style.display = 'none';
         error.style.display = 'none';
         inputForm.style.display = 'block';
         generatedContent = '';
