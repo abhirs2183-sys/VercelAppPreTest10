@@ -462,6 +462,7 @@ body.light-mode {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
     margin-bottom: 1.4rem;
 }
@@ -683,9 +684,13 @@ body.light-mode {
     justify-content: center;
     gap: 0.5rem;
     color: var(--accent-yellow);
-    margin-top: 1rem;
     font-weight: 500;
     white-space: nowrap;
+    position: absolute;
+    bottom: -2.6rem;
+    left: 0;
+    right: 0;
+    margin: 0;
 }
 
 .footer {
