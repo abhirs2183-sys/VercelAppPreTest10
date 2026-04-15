@@ -358,7 +358,7 @@ def generate_update_backup(query, case_id):
 
     fk_column = get_foreign_key_column(table_name)
     
-    if (where_clause[0] == 'f' or where_clause[0] == 'F'):
+    if (where_clause and (where_clause[0] == 'f' or where_clause[0] == 'F')):
         where_list = where_clause.lower()
         where_list = split_where_clause(where_list)
         tbn = table_name.lower()
@@ -598,10 +598,10 @@ def generate_delete_backup(query, case_id, table_name, count):
 
     fk_column = get_foreign_key_column(table_name)
     alias_name = table_name
-    if (where_clause[0] == 'f' or where_clause[0] == 'F'):
+    if (where_clause and (where_clause[0] == 'f' or where_clause[0] == 'F')):
         where_list = where_clause.lower()
         where_list = split_where_clause(where_list)
-        if(where_list[2] == 'from'):
+        if(len(where_list) > 2 and where_list[2] == 'from'):
             where_list = where_list[2:]
             Trd_word_from = True
             
@@ -668,10 +668,10 @@ def extract_table_from_delete(query):
 
     where_clause_list = where_clause.lower()
     where_clause_list = split_where_clause(where_clause_list)
-    if(where_clause_list[2] == 'from'):
+    if(where_clause_list and len(where_clause_list) > 2 and where_clause_list[2] == 'from'):
         where_clause_list = where_clause_list[2:]        
     tn = table_name.lower()
-    if tn in where_clause_list:
+    if where_clause_list and tn in where_clause_list:
         index = where_clause_list.index(tn)
         if (index > 0 and where_clause_list[index - 1] != 'join'
                 and where_clause_list[index - 1] != 'from'):
@@ -679,7 +679,6 @@ def extract_table_from_delete(query):
                 table_name = where_clause_list[index - 2]
             elif (where_clause_list[index - 1] != 'as'):
                 table_name = where_clause_list[index - 1]
-
     if match:
         return table_name
     return None
