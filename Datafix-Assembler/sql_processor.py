@@ -538,8 +538,10 @@ def smart_split_set_clause(set_clause):
 
 def get_foreign_key_column(table_name):
     table_lower = table_name.lower()
-    if table_lower == 'tenant' or table_lower == 'vendor':
+    if table_lower == 'tenant' or table_lower == 'vendor' or table_lower == 'customer':
         return 'hmyperson'
+    elif table_lower == 'listprop2' or table_lower == 'listprop4':
+        return 'hproperty'
     return 'hmy'
 
 def generate_delete_receipt_backup(query, case_id, count_t, count_d, count_g):

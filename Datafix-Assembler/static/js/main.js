@@ -188,6 +188,13 @@ document.addEventListener('DOMContentLoaded', function() {
         error.style.display = 'none';
         processing.style.display = 'block';
 
+        const uploadSection = document.getElementById('upload-section');
+        if (uploadSection) {
+            setTimeout(() => {
+                uploadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 60);
+        }
+
         fetch('/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -207,12 +214,6 @@ document.addEventListener('DOMContentLoaded', function() {
             result.style.display = 'block';
             if (smartPasteToggle) smartPasteToggle.style.display = 'none';
             if (smartPastePanel) { smartPastePanel.classList.remove('open'); smartPasteToggle && smartPasteToggle.classList.remove('active'); }
-            const uploadSection = document.getElementById('upload-section');
-            if (uploadSection) {
-                setTimeout(() => {
-                    uploadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 60);
-            }
         })
         .catch(err => {
             processing.style.display = 'none';
