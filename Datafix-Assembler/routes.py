@@ -43,6 +43,7 @@ def generate_package():
     metadata = {
         'created_by': field('created_by'),
         'case_id':    field('case_id'),
+        'description':field('description'),
         'client_pin': field('client_pin'),
         'client_name':field('client_name'),
         'username':   field('db_username'),

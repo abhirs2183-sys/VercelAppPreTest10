@@ -218,7 +218,7 @@ def extract_sql_queries(lines):
 
 def is_sql_statement_start(line):
     line_lower = line.lower()
-    sql_keywords = ['update ', 'delete ', 'exec ', 'execute ']
+    sql_keywords = ['update ', 'delete ', 'exec ', 'execute ', ]
     return any(line_lower.startswith(kw) for kw in sql_keywords)
 
 
@@ -248,6 +248,8 @@ def generate_output(metadata, sql_queries):
     output_lines.append(f"Created By     : {metadata['created_by']}")  #edited
     output_lines.append(f"Date           : {current_date}")  #edited
     output_lines.append(f"Case#          : {metadata['case_id']}")  #edited
+    if metadata.get('description'):
+        output_lines.append(f"Description    : {metadata['description']}")
     output_lines.append('//End Notes')
     output_lines.append('')
     output_lines.append('')

@@ -174,6 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const payload = {
             created_by: document.getElementById('createdBy').value,
             case_id: document.getElementById('caseId').value,
+            description: document.getElementById('description').value,
             client_pin: document.getElementById('clientPin').value,
             client_name: document.getElementById('clientName').value,
             db_username: document.getElementById('dbUsername').value,
