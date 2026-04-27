@@ -218,7 +218,7 @@ def extract_sql_queries(lines):
 
 def is_sql_statement_start(line):
     line_lower = line.lower()
-    sql_keywords = ['update ', 'delete ', 'exec ', 'execute ']
+    sql_keywords = ['update ', 'delete ', 'exec ', 'execute ', 'drop ', 'alter']
     return any(line_lower.startswith(kw) for kw in sql_keywords)
 
 
@@ -302,6 +302,32 @@ def generate_output(metadata, sql_queries):
                         output_lines.append('GO')
                         output_lines.append(stmt)
                         output_lines.append('')
+        elif query_type == 'DROP':
+            parts = query.strip().split()
+            if(len(parts) == 3):
+                table_name = parts[2].lower()
+                count = delete_table_counts.get(table_name, 0)
+                backup_statements = generate_drop_backup(query, metadata['case_id'],
+                                                        table_name, count)
+                delete_table_counts[table_name] = count + 1
+                if(backup_statements):
+                    for stmt in backup_statements:
+                        output_lines.append('GO')
+                        output_lines.append(stmt)
+                        output_lines.append('')
+        elif query_type == 'ALTER':
+            parts = query.strip().split()
+            if(len(parts) == 6 and parts[3].lower() == 'drop' and parts[4].lower() == 'column'):
+                table_name = parts[2].lower()
+                column_name = parts[5].lower()
+                count = delete_table_counts.get(table_name, 0)
+                backup_statements = generate_alter_drop_backup(column_name, metadata['case_id'], table_name, count)
+                delete_table_counts[table_name] = count + 1
+                if(backup_statements):
+                    for stmt in backup_statements:
+                        output_lines.append('GO')
+                        output_lines.append(stmt)
+                        output_lines.append('')
         elif('yardi_delete_receipt' in query.lower()):
             count_t = delete_table_counts.get('trans', 0)
             count_d = delete_table_counts.get('detail', 0)
@@ -342,6 +368,10 @@ def get_query_type(query):
         return 'DELETE'
     elif query_lower.startswith('exec ') or query_lower.startswith('execute '):
         return 'EXEC'
+    elif query_lower.startswith('drop '):
+        return 'DROP'
+    elif query_lower.startswith('alter '):
+        return 'ALTER'
     return 'UNKNOWN'
 
 
@@ -545,6 +575,42 @@ def get_foreign_key_column(table_name):
     elif table_lower == 'listprop2' or table_lower == 'listprop4':
         return 'hproperty'
     return 'hmy'
+
+def generate_drop_backup(query, case_id, table_name, count):
+    statements = []
+    if count == 0:
+        backup_table = f"{table_name}_{case_id}"
+    else:
+        backup_table = f"{table_name}_{count}_{case_id}"
+    fk_column = get_foreign_key_column(table_name)
+    stmt = ''
+    stmt += f"Insert into DatafixHistory (hycrm, sTableName, sColumnName, hForeignKey, sNotes, sNewValue, sOldValue, dtdate)\n"
+    stmt += f"(Select '{case_id}', '{table_name}','',{fk_column}, 'Dropping table (Backup table : {backup_table})','','', getdate() \nfrom {table_name}"
+    stmt += "\n)"
+    statements.append(stmt)
+    backup_stmt = ''
+    backup_stmt += f"select * into {backup_table} from {table_name}"
+    statements.append(backup_stmt)
+
+    return statements
+
+def generate_alter_drop_backup(column_name, case_id, table_name, count):
+    statements = []
+    if count == 0:
+        backup_table = f"{table_name}_{case_id}"
+    else:
+        backup_table = f"{table_name}_{count}_{case_id}"
+    fk_column = get_foreign_key_column(table_name)
+    stmt = ''
+    stmt += f"Insert into DatafixHistory (hycrm, sTableName, sColumnName, hForeignKey, sNotes, sNewValue, sOldValue, dtdate)\n"
+    stmt += f"(Select '{case_id}', '{table_name}','{column_name}',{fk_column}, 'Dropping column {column_name} (Backup table : {backup_table})','',{column_name}, getdate() \nfrom {table_name}"
+    stmt += "\n)"
+    statements.append(stmt)
+    backup_stmt = ''
+    backup_stmt += f"select * into {backup_table} from {table_name}"
+    statements.append(backup_stmt)
+
+    return statements
 
 def generate_delete_receipt_backup(query, case_id, count_t, count_d, count_g):
     statements = []
