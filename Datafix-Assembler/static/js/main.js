@@ -174,13 +174,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const payload = {
             created_by: document.getElementById('createdBy').value,
             case_id: document.getElementById('caseId').value,
-            description: document.getElementById('description').value,
             client_pin: document.getElementById('clientPin').value,
             client_name: document.getElementById('clientName').value,
             db_username: document.getElementById('dbUsername').value,
             db_password: document.getElementById('dbPassword').value,
             db_server: document.getElementById('dbServer').value,
             db_name: document.getElementById('dbName').value,
+            description: document.getElementById('description').value,
             sql_queries: document.getElementById('sqlQueries').value
         };
 

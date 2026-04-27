@@ -913,6 +913,10 @@ body.light-mode {
     grid-column: 1 / -1;
 }
 
+.form-group-full + .form-group-full {
+    margin-top: 1.25rem;
+}
+
 .form-label {
     font-size: 0.85rem;
     font-weight: 500;
